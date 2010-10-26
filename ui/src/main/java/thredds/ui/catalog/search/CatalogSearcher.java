@@ -39,6 +39,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.*;
 
 import ucar.nc2.ui.widget.HtmlBrowser;
 import ucar.util.prefs.*;
