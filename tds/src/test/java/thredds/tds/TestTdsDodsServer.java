@@ -41,7 +41,7 @@ import ucar.nc2.thredds.ThreddsDataFactory;
 import ucar.nc2.dataset.*;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
-import ucar.nc2.util.CompareNetcdf;
+import ucar.nc2.util.CompareNetcdf2;
 import ucar.nc2.util.IO;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dt.GridDatatype;
@@ -52,6 +52,7 @@ import ucar.unidata.util.StringUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Formatter;
 import java.util.List;
 
 public class TestTdsDodsServer extends TestCase {
@@ -142,9 +143,9 @@ public class TestTdsDodsServer extends TestCase {
         String localPath = dirName+filename;
         System.out.println("--Compare "+localPath+" to "+dodsUrl);
 
-        NetcdfDataset org_ncfile = NetcdfDataset.openDataset(localPath);
-        NetcdfDataset dods_file = NetcdfDataset.openDataset(dodsUrl);
-        CompareNetcdf.compareFiles(org_ncfile, dods_file);
+        NetcdfFile org_ncfile = NetcdfDataset.openDataset(localPath);
+        NetcdfFile dods_file = NetcdfDataset.openDataset(dodsUrl);
+        CompareNetcdf2.compareFiles(org_ncfile, dods_file, new Formatter());
         return 1;
       }
     }, false);
