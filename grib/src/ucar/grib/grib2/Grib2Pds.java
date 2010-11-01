@@ -185,53 +185,6 @@ abstract public class Grib2Pds extends GribPds {
     // otherwise ??
 
     throw new UnsupportedOperationException();
-
-    /* String timeUnitString;
-    switch (timeUnit) { // code table 4.4
-      case 3:
-        timeUnitString = "month";
-        break;
-      case 4:
-        type = Calendar.YEAR;
-        break;
-      case 5:
-        type = Calendar.YEAR;
-        factor = 10;
-        break;
-      case 6:
-        type = Calendar.YEAR;
-        factor = 30;
-        break;
-      case 7:
-        type = Calendar.YEAR;
-        factor = 100;
-        break;
-      case 10:
-        type = Calendar.HOUR_OF_DAY;
-        factor = 3;
-        break;
-      case 11:
-        type = Calendar.HOUR_OF_DAY;
-        factor = 6;
-        break;
-      case 12:
-        type = Calendar.HOUR_OF_DAY;
-        factor = 12;
-        break;
-      case MISSING: // if there is no time unit / valid time, assume valid time == ref time
-        type = Calendar.HOUR_OF_DAY;
-        factor = 0;
-        break;
-      default:
-        log.warn("Unknown timeUnit= " + timeUnit);
-        factor = 0;
-        break;
-    }
-    // otherwise
-    DateUnit du = new DateUnit(intv, String timeUnitString, new Date(refTime));
-
-
-    */
   }
 
   ////////////////////////
@@ -429,12 +382,29 @@ abstract public class Grib2Pds extends GribPds {
     int[] result = new int[2];
     //result[0] = _getForecastTime();  // LOOK probably wrong - depends on ti.timeIncrementType, see code table 4.11
     // result[1] = result[0] + incr;
-    result[1] = pdsIntv.calcForecastTime();
+    result[1] = pdsIntv.getForecastTime();
     result[0] = result[1] - incr;
 
     intv = result;
     return result;
   }
+
+  public int[] getForecastTimeInterval(int wantUnit) {
+    int[] intv = getForecastTimeInterval();
+    int timeUnit = getTimeUnit();
+    if (timeUnit == wantUnit)
+      return intv;
+
+    long facHave = Grib2Tables.codeTable4_4_toSecs(timeUnit);
+    long facWant = Grib2Tables.codeTable4_4_toSecs(wantUnit);
+    double fac = (double) facHave / facWant;
+
+    int[] convertIntv = new int[2];
+    convertIntv[0] = (int) (intv[0] * fac);
+    convertIntv[1] = (int) (intv[1] * fac);
+    return convertIntv;
+  }
+
 
   // forecast time for points, beginning of interval for intervals
 
@@ -507,7 +477,7 @@ abstract public class Grib2Pds extends GribPds {
   static public interface PdsInterval {
     public long getIntervalTimeEnd();
 
-    public int calcForecastTime();
+    public int getForecastTime();
 
     public int getNumberTimeRanges();
 
@@ -846,7 +816,7 @@ abstract public class Grib2Pds extends GribPds {
 
     Grib2Pds11(byte[] input, long refTime, Calendar cal) throws IOException {
       super(input, refTime, cal);
-      endInterval = calcTime(cal, 37);
+      endInterval = calcTime(refTime, cal, 37);
       ft = makeForecastTime(refTime, endInterval, getTimeUnit());
     }
 
@@ -860,7 +830,7 @@ abstract public class Grib2Pds extends GribPds {
     }
 
     @Override
-    public int calcForecastTime() {
+    public int getForecastTime() {
       return ft;
     }
 
@@ -947,7 +917,7 @@ abstract public class Grib2Pds extends GribPds {
 
     Grib2Pds12(byte[] input, long refTime, Calendar cal) throws IOException {
       super(input, refTime, cal);
-      endInterval = calcTime(cal, 37);
+      endInterval = calcTime(refTime, cal, 37);
       ft = makeForecastTime(refTime, endInterval, getTimeUnit());
     }
 
@@ -961,7 +931,7 @@ abstract public class Grib2Pds extends GribPds {
     }
 
     @Override
-    public int calcForecastTime() {
+    public int getForecastTime() {
       return ft;
     }
 
@@ -1067,7 +1037,7 @@ abstract public class Grib2Pds extends GribPds {
 
     Grib2Pds9(byte[] input, long refTime, Calendar cal) throws IOException {
       super(input, refTime, cal);
-      endInterval = calcTime(cal, 48);
+      endInterval = calcTime(refTime, cal, 48);
       ft = makeForecastTime(refTime, endInterval, getTimeUnit());
     }
 
@@ -1081,7 +1051,7 @@ abstract public class Grib2Pds extends GribPds {
     }
 
     @Override
-    public int calcForecastTime() {
+    public int getForecastTime() {
       return ft;
     }
 
@@ -1127,7 +1097,7 @@ abstract public class Grib2Pds extends GribPds {
 
     Grib2Pds8(byte[] input, long refTime, Calendar cal) throws IOException {
       super(input, refTime, cal);
-      endInterval = calcTime(cal, 35);
+      endInterval = calcTime(refTime, cal, 35);
       ft = makeForecastTime(refTime, endInterval, getTimeUnit());
     }
 
@@ -1141,7 +1111,7 @@ abstract public class Grib2Pds extends GribPds {
     }
 
     @Override
-    public int calcForecastTime() {
+    public int getForecastTime() {
       return ft;
     }
 
@@ -1225,7 +1195,7 @@ abstract public class Grib2Pds extends GribPds {
 
     Grib2Pds10(byte[] input, long refTime, Calendar cal) throws IOException {
       super(input, refTime, cal);
-      endInterval = calcTime(cal, 36);
+      endInterval = calcTime(refTime, cal, 36);
       ft = makeForecastTime(refTime, endInterval, getTimeUnit());
     }
 
@@ -1239,7 +1209,7 @@ abstract public class Grib2Pds extends GribPds {
     }
 
     @Override
-    public int calcForecastTime() {
+    public int getForecastTime() {
       return ft;
     }
 
@@ -1375,19 +1345,21 @@ abstract public class Grib2Pds extends GribPds {
 
   // translate 7 byte time into Date millisecs
 
-  long calcTime(Calendar calendar, int startIndex) {
+  long calcTime(long refTime, Calendar calendar, int startIndex) {
 
     int year = GribNumbers.int2(getOctet(startIndex++), getOctet(startIndex++));
-    int month = getOctet(startIndex++) - 1;
+    int month = getOctet(startIndex++);
     int day = getOctet(startIndex++);
     int hour = getOctet(startIndex++);
     int minute = getOctet(startIndex++);
     int second = getOctet(startIndex++);
 
+    if ((year == 0) && (month == 0) && (day == 0) && (hour == 0) && (minute == 0) && (second == 0)) return refTime;
+
     calendar.clear();
     calendar.setTimeZone(java.util.TimeZone.getTimeZone("GMT"));
     calendar.set(Calendar.DST_OFFSET, 0);
-    calendar.set(year, month, day, hour, minute, second);
+    calendar.set(year, month-1, day, hour, minute, second);
 
     return calendar.getTimeInMillis();
   }

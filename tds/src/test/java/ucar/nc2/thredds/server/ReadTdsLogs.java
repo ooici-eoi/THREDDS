@@ -680,8 +680,9 @@ public class ReadTdsLogs {
     final ReadTdsLogs reader = new ReadTdsLogs(serverTest);
     long startElapsed = System.nanoTime();
 
-    //String accessLogs = "C:\\Users\\caron\\tdsMonitor\\motherlode.ucar.edu%3A8080\\access\\temp\\";
-    String accessLogs = "C:\\Users\\caron\\tdsMonitor\\motherlode.ucar.edu%3A8081\\access\\";
+    //String accessLogs = "C:\\Users\\edavis\\tdsMonitor\\motherlode.ucar.edu%3A8080\\access\\tmp\\";
+    String accessLogs = "C:\\Users\\caron\\tdsMonitor\\motherlode.ucar.edu%3A8080\\access\\temp\\";
+    //String accessLogs = "C:\\Users\\caron\\tdsMonitor\\motherlode.ucar.edu%3A8081\\access\\";
 
     System.out.printf("server=%s send files from %s %n", serverTest, accessLogs);
 

@@ -217,8 +217,9 @@ public final class ThreddsWmsController extends AbstractWmsController
       throw e;
     }
     catch ( java.net.SocketException e ) {
-      log.debug( "dispatchWmsRequest(): SocketException: ", e );
+      log.debug( "dispatchWmsRequest(): SocketException: " + e.getMessage());
       log.info( UsageLog.closingMessageForRequestContext( ServletUtil.STATUS_CLIENT_ABORT, -1 ) );
+      httpServletResponse.setStatus(ServletUtil.STATUS_CLIENT_ABORT);
       return null;
     }
     catch ( Exception e ) {

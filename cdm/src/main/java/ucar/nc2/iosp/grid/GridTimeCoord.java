@@ -34,6 +34,7 @@
 package ucar.nc2.iosp.grid;
 
 import ucar.grib.GribPds;
+import ucar.grib.grib2.Grib2Tables;
 import ucar.ma2.*;
 
 import ucar.nc2.*;
@@ -54,7 +55,8 @@ public class GridTimeCoord implements Comparable<GridTimeCoord> {
 
   //private GridTableLookup lookup;
   private int seq = 0; // for getting a unique name
-  private String timeUnit;
+  private String timeUdunit;
+  private int timeUnit;
 
   private Date baseDate;
   private List<Date> times;
@@ -73,13 +75,10 @@ public class GridTimeCoord implements Comparable<GridTimeCoord> {
     for (GridRecord record : records) {
       if (this.baseDate == null) {
         this.baseDate = record.getReferenceTime();
-        this.timeUnit = record.getTimeUdunitName();
+        this.timeUdunit = record.getTimeUdunitName();
+        this.timeUnit = record.getTimeUnit();
         //System.out.printf("%s%n", record.getParameterDescription());
       }
-
-      // make sure that the time units agree
-      if (this.timeUnit != record.getTimeUdunitName())
-        log.warn(record + " does not have same time unit= " + this.timeUnit + " != " + record.getTimeUdunitName());
 
       // use earlier reference date
       Date ref = record.getReferenceTime();
@@ -105,8 +104,7 @@ public class GridTimeCoord implements Comparable<GridTimeCoord> {
             log.warn(gr + " does not have same base date= " + baseDate + " != " + ref);
 
           GribPds pds = ggr.getPds();
-          int[] timeInv = pds.getForecastTimeInterval();
-
+          int[] timeInv = pds.getForecastTimeInterval(this.timeUnit);
           int start = timeInv[0];
           int end = timeInv[1];
           int intv2 = end - start;
@@ -149,7 +147,7 @@ public class GridTimeCoord implements Comparable<GridTimeCoord> {
   boolean matchTimes(List<GridRecord> records) {
     // make sure that the time units agree
     for (GridRecord record : records) {
-      if (!this.timeUnit.equals(record.getTimeUdunitName()))
+      if (!this.timeUdunit.equals(record.getTimeUdunitName()))
         return false;
     }
 
@@ -171,7 +169,7 @@ public class GridTimeCoord implements Comparable<GridTimeCoord> {
 
         GribGridRecord ggr = (GribGridRecord) record;
         GribPds pds = ggr.getPds();
-        int[] timeInv = pds.getForecastTimeInterval();
+        int[] timeInv = pds.getForecastTimeInterval(this.timeUnit);
 
         int start = timeInv[0];
         int end = timeInv[1];
@@ -250,7 +248,7 @@ public class GridTimeCoord implements Comparable<GridTimeCoord> {
 
     DateFormatter formatter = new DateFormatter();
     String refDate = formatter.toDateTimeStringISO(baseDate);
-    String udunit = timeUnit + " since " + refDate;
+    String udunit = timeUdunit + " since " + refDate;
     DateUnit dateUnit = null;
     try {
       dateUnit = new DateUnit(udunit);
@@ -286,16 +284,16 @@ public class GridTimeCoord implements Comparable<GridTimeCoord> {
 
     if (!isInterval()) {
       v.addAttribute(new Attribute("long_name", "forecast time"));
-      v.addAttribute(new Attribute("units", timeUnit + " since " + refDate));
+      v.addAttribute(new Attribute("units", timeUdunit + " since " + refDate));
 
     } else {
       Formatter intervalName = new Formatter();
       if (constantInterval < 0)
         intervalName.format("(mixed intervals)");
       else
-        intervalName.format("(%d %s intervals)", constantInterval, this.timeUnit);
+        intervalName.format("(%d %s intervals)", constantInterval, this.timeUdunit);
       v.addAttribute(new Attribute("long_name", "forecast time for " + intervalName.toString()));
-      v.addAttribute(new Attribute("units", timeUnit + " since " + refDate));
+      v.addAttribute(new Attribute("units", timeUdunit + " since " + refDate));
       v.addAttribute(new Attribute("bounds", getName() + "_bounds"));
 
       // add times bound variable
@@ -306,7 +304,7 @@ public class GridTimeCoord implements Comparable<GridTimeCoord> {
       vb.setDataType(DataType.INT);
       vb.setDimensions(getName() + " "+ bd.getName());
       vb.addAttribute(new Attribute("long_name", "bounds for " + getName()));
-      vb.addAttribute(new Attribute("units", timeUnit + " since " + refDate));
+      vb.addAttribute(new Attribute("units", timeUdunit + " since " + refDate));
 
       // add data
       vb.setCachedData(boundsArray, false);
@@ -341,7 +339,11 @@ public class GridTimeCoord implements Comparable<GridTimeCoord> {
     else {
       int index = 0;
       for (TimeCoordWithInterval t : timeIntvs) {
-        if (t.coord.equals(validTime) && t.interval == record.getTimeInterval()) return index;
+        GribGridRecord ggr = (GribGridRecord) record;  // only true for Grib      
+        GribPds pds = ggr.getPds();
+        int[] intv = pds.getForecastTimeInterval(timeUnit); // may need to convert units
+        int diff = intv[1] - intv[0];
+        if (t.coord.equals(validTime) && t.interval == diff) return index;
         index++;
       }
       return -1;
@@ -372,11 +374,12 @@ public class GridTimeCoord implements Comparable<GridTimeCoord> {
    * @return TimeUnit
    */
   String getTimeUnit() {
-    return timeUnit;
+    return timeUdunit;
   }
 
   /**
-   * is this a mixed interval
+   * is this a mixed interval ?
+   * Only true for Grib
    *
    * @return mixed
    */
@@ -423,6 +426,11 @@ public class GridTimeCoord implements Comparable<GridTimeCoord> {
     public boolean equals(Object obj) {
       TimeCoordWithInterval o = (TimeCoordWithInterval) obj;
       return coord.equals(o.coord) && (interval == o.interval);
+    }
+
+    @Override
+    public String toString() {
+      return "start=" + start +", interval=" + interval;
     }
   }
 

@@ -250,10 +250,15 @@ public class GempakGridRecord implements GridRecord {
         return decimalScale;
     }
 
-    @Override
-    public String getTimeUdunitName() {
-      return "minutes";
-    }
+  @Override
+  public int getTimeUnit() {
+    return 0;
+  }
+
+  @Override
+  public String getTimeUdunitName() {
+    return "minutes";
+  }
 
     @Override
     // this determines how records get grouped into a cdm variable
@@ -306,10 +311,6 @@ public class GempakGridRecord implements GridRecord {
         buf.append(GempakUtil.getGridPackingName(packingType));
         return buf.toString();
     }
-
-  public int getTimeInterval( ) { 
-    return -1;
-  }
 
 }
 

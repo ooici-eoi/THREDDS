@@ -291,6 +291,13 @@ public final class GribGridRecord implements GridRecord {
       return Grib1Tables.getTimeUnit(getTimeUnit(), true);
   }
 
+  public String getTimeUnitName() {
+    if (edition == 2)
+      return Grib2Tables.codeTable4_4(getTimeUnit());
+    else
+      return Grib1Tables.getTimeUnit(getTimeUnit(), false);
+  }
+
   public int getTimeUnit() {
     return pds.getTimeUnit();
   }
@@ -313,7 +320,7 @@ public final class GribGridRecord implements GridRecord {
       if (edition == 1) {
         result += result * 37 + getLevelType1();
         result += result * 37 + getParameterName().hashCode();
-        String statName = getStatisticalProcessTypeName();
+        String statName = getStatisticalProcessTypeNameShort();
         if (statName != null) result += result * 37 + statName.hashCode();
 
       } else {
@@ -324,7 +331,7 @@ public final class GribGridRecord implements GridRecord {
         result += result * 37 + getLevelType1();
         result += result * 37 + pds2.getParameterCategory();
         result += result * 37 + productTemplate;
-        String statName = getStatisticalProcessTypeName();
+        String statName = getStatisticalProcessTypeNameShort();
         if (statName != null) result += result * 37 + statName.hashCode();
 
         result += result * 37 +  getLevelType2(); // ??
@@ -397,7 +404,7 @@ public final class GribGridRecord implements GridRecord {
     Formatter f = new Formatter();
     boolean disambig = false;
 
-    String statName = getStatisticalProcessTypeName();
+    String statName = getStatisticalProcessTypeNameShort();
     if (statName != null) {
        f.format("_%s", statName);
        disambig = true;
@@ -504,14 +511,11 @@ public final class GribGridRecord implements GridRecord {
     return pds.isInterval();
   }
 
-  @Override
-  public int getTimeInterval() {
-    if (!isInterval()) return -1;
-    int[] intv = pds.getForecastTimeInterval();
-    return intv[1] - intv[0];
+  public String getStatisticalProcessTypeName() {
+    return Grib2Tables.codeTable4_10( getStatisticalProcessType());
   }
 
-  public String getStatisticalProcessTypeName() {
+  public String getStatisticalProcessTypeNameShort() {
     return Grib2Tables.codeTable4_10short( getStatisticalProcessType());
   }
 
@@ -546,10 +550,11 @@ public final class GribGridRecord implements GridRecord {
   @Override
   public String toString() {
     return "GribGridRecord{" +
-        ", param=" + getParameterDescription() +
+        "param=" + getParameterDescription() +
         ", levelType1=" + pds.getLevelType1() +
-        ", levelValue1=" + pds.getLevelType2() +
-        ", forecastDate=" + pds.getForecastDate() +
+        ", levelValue1=" + pds.getLevelValue1() +
+        ", forecastTime=" + pds.getForecastTime() +
+        ", pdsOffset=" + pdsOffset +
         '}';
   }
 

@@ -123,8 +123,17 @@ public interface GridRecord {
   public int getDecimalScale();
 
   /**
+   * Get the time unit as a code, which should be Grib2 table 4.4.
+   *
+   * @return the time unit as a code
+   */
+  public int getTimeUnit();
+
+
+  /**
    * Get the time unit as a String. Must be able to create a udunit like:
    * String udunit = timeUnit + " since " + refDate
+   * So this assumes that any conversion factor is applied to the value
    *
    * @return the time unit as a String
    */
@@ -143,13 +152,6 @@ public interface GridRecord {
    * @return unique CDM variable name
    */
   public String cdmVariableName(GridTableLookup lookup, boolean useLevel, boolean useStat);
-
-  /**
-   * Get the time interval, if there is one
-   *
-   * @return time interval in units of getTimeUnitName(), or -1 if not a time interval
-   */
-  public int getTimeInterval();
 
 }
 
