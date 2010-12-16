@@ -97,7 +97,7 @@ public class CoordinateSystem {
   protected List<CoordinateTransform> coordTrans = new ArrayList<CoordinateTransform>();
   protected List<Dimension> domain = new ArrayList<Dimension>(); // set of dimension
   protected String name;
-  protected CoordinateAxis xAxis, yAxis, zAxis, tAxis, latAxis, lonAxis, hAxis, pAxis, ensAxis;
+  protected CoordinateAxis xAxis, yAxis, zAxis, tAxis, latAxis, lonAxis, hAxis, pAxis, ensAxis, nAxis;
   protected CoordinateAxis aziAxis, elevAxis, radialAxis;
   protected boolean isImplicit;
   protected String dataType; // Grid, Station, etc
@@ -129,6 +129,7 @@ public class CoordinateSystem {
         if (axisType == AxisType.Time) tAxis = lesserRank(tAxis, axis);
         if (axisType == AxisType.Lat) latAxis = lesserRank(latAxis, axis);
         if (axisType == AxisType.Lon) lonAxis = lesserRank(lonAxis, axis);
+        if (axisType == AxisType.Node) nAxis = lesserRank(nAxis, axis);
         if (axisType == AxisType.Height) hAxis = lesserRank(hAxis, axis);
         if (axisType == AxisType.Pressure) pAxis = lesserRank(pAxis, axis);
         if (axisType == AxisType.Ensemble) ensAxis = lesserRank(ensAxis, axis);
@@ -233,6 +234,13 @@ public class CoordinateSystem {
     }
     return result;
   }
+
+
+  /** get the CoordinateAxis with AxisType.GeoX, or null if none.
+   *  if more than one, choose one with smallest rank
+   * @return axis of type AxisType.GeoX, or null if none
+   */
+  public CoordinateAxis getNaxis() { return nAxis; }
 
   /** get the CoordinateAxis with AxisType.GeoX, or null if none.
    *  if more than one, choose one with smallest rank
@@ -352,6 +360,12 @@ public class CoordinateSystem {
    * @return true if it has Lat and Lon CoordinateAxis
    */
   public boolean isLatLon() { return (latAxis != null) && (lonAxis != null); }
+
+  /**
+   * true if it has Lat and Lon CoordinateAxis
+   * @return true if it has Lat and Lon CoordinateAxis
+   */
+  public boolean isMesh() { return (nAxis != null); }
 
   /** true if it has radial distance and azimuth CoordinateAxis
    * @return true if it has radial distance and azimuth CoordinateAxis

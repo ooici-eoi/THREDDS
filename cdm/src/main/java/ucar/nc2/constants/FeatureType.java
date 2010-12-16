@@ -80,6 +80,8 @@ public enum FeatureType {
   SWATH,
   /** Image data */
   IMAGE,
+  /** Mesh data */
+  MESH,
 
   /** Any of the point types */
   ANY_POINT,

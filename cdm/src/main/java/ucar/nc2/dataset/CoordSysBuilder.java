@@ -139,6 +139,7 @@ public class CoordSysBuilder implements CoordSysBuilderIF {
       }
     });
 
+    registerConvention("UGRID", UGRIDConvention.class, null);
     registerConvention("COARDS", COARDSConvention.class, null);
     registerConvention("NCAR-CSM", CSMConvention.class, null);
     registerConvention("Unidata Observation Dataset v1.0", UnidataObsConvention.class, null);

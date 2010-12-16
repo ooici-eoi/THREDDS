@@ -79,6 +79,10 @@ public enum AxisType {
    */
   Lon(5),
   /**
+   * represents a node coordinate
+   */
+  Node(5),
+  /**
    * represents a vertical height coordinate
    */
   Height(3),
