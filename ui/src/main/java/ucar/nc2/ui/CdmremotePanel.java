@@ -132,7 +132,7 @@ public class CdmremotePanel extends JPanel {
 
        // Start, Header, Data, End, Error,
        // StationList, PointFeatureCollection, PointFeature
-
+       /*
         switch (mess.magic) {
           case Header:
             mess.obj = NcStreamProto.Header.parseFrom(m);
@@ -158,6 +158,7 @@ public class CdmremotePanel extends JPanel {
           default:
             mess.obj = "unknown";
         }
+        */
       }
     } catch (IOException ioe) {
 
