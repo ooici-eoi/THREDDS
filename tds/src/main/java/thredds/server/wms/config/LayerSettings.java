@@ -30,8 +30,8 @@ package thredds.server.wms.config;
 
 import org.jdom.Element;
 import uk.ac.rdg.resc.ncwms.graphics.ColorPalette;
-import uk.ac.rdg.resc.ncwms.util.Range;
-import uk.ac.rdg.resc.ncwms.util.Ranges;
+import uk.ac.rdg.resc.edal.util.Range;
+import uk.ac.rdg.resc.edal.util.Ranges;
 
 /**
  * Simple Java bean encapsulating the settings (allowFeatureInfo,
@@ -43,6 +43,8 @@ import uk.ac.rdg.resc.ncwms.util.Ranges;
 public class LayerSettings
 {
     private Boolean allowFeatureInfo = null;
+    private Boolean nearestTime = null;
+    private Boolean intervalTime = null;
     private Range<Float> defaultColorScaleRange = null;
     private String defaultPaletteName =  null;
     private Boolean logScaling = null;
@@ -52,6 +54,8 @@ public class LayerSettings
     {
         if (parentElement == null) return; // Create a set of layer settings with all-null fields
         this.allowFeatureInfo = getBoolean(parentElement, "allowFeatureInfo");
+        this.nearestTime = getBoolean(parentElement, "nearestTime");
+        this.intervalTime = getBoolean(parentElement, "intervalTime");
         this.defaultColorScaleRange = getRange(parentElement, "defaultColorScaleRange");
         this.defaultPaletteName = parentElement.getChildTextTrim("defaultPaletteName");
         // If the default palette name tag is used, it must be populated
@@ -121,6 +125,14 @@ public class LayerSettings
 
     public Boolean isAllowFeatureInfo() {
         return allowFeatureInfo;
+    }
+
+    public Boolean isNearestTime() {
+        return nearestTime;
+    }
+
+    public Boolean isIntervalTime() {
+        return intervalTime;
     }
 
     public Range<Float> getDefaultColorScaleRange() {

@@ -26,6 +26,7 @@ public class TdsServerInfo
   private String hostInstitutionWebSite;
   private String hostInstitutionLogoUrl;
   private String hostInstitutionLogoAltText;
+  private boolean nearestTime;
 
   public String getName() {
     return name;
@@ -129,5 +130,9 @@ public class TdsServerInfo
 
   public void setHostInstitutionLogoAltText( String hostInstitutionLogoAltText ) {
     this.hostInstitutionLogoAltText = hostInstitutionLogoAltText;
+  }
+
+  public boolean getAllowsNearestTime() {
+    return nearestTime;
   }
 }

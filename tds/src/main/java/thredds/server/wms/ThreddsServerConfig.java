@@ -198,4 +198,9 @@ public class ThreddsServerConfig implements ServerConfig
     public String getContactEmail() {
       return this.tdsContext.getServerInfo().getContactEmail();
     }
+
+    @Override
+    public boolean getAllowsNearestTime() {
+      return this.tdsContext.getServerInfo().getAllowsNearestTime();
+    }
 }

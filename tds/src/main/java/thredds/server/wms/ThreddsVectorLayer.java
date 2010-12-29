@@ -33,9 +33,9 @@ import org.joda.time.Chronology;
 import org.joda.time.DateTime;
 import org.opengis.metadata.extent.GeographicBoundingBox;
 import thredds.server.wms.config.LayerSettings;
-import uk.ac.rdg.resc.ncwms.coords.HorizontalCoordSys;
+import uk.ac.rdg.resc.edal.coverage.grid.HorizontalGrid;
 import uk.ac.rdg.resc.ncwms.graphics.ColorPalette;
-import uk.ac.rdg.resc.ncwms.util.Range;
+import uk.ac.rdg.resc.edal.util.Range;
 import uk.ac.rdg.resc.ncwms.wms.ScalarLayer;
 import uk.ac.rdg.resc.ncwms.wms.VectorLayer;
 
@@ -107,8 +107,8 @@ class ThreddsVectorLayer implements VectorLayer, ThreddsLayer {
         return this.wrappedLayer.getGeographicBoundingBox();
     }
 
-    public HorizontalCoordSys getHorizontalCoordSys() {
-        return this.wrappedLayer.getHorizontalCoordSys();
+    public HorizontalGrid getHorizontalGrid() {
+        return this.wrappedLayer.getHorizontalGrid();
     }
 
     public Chronology getChronology() {
@@ -152,6 +152,18 @@ class ThreddsVectorLayer implements VectorLayer, ThreddsLayer {
     @Override
     public boolean isQueryable() {
         return this.layerSettings.isAllowFeatureInfo();
+    }
+
+        /// The properties below are taken from the LayerSettings
+
+    @Override
+    public boolean isNearestTime() {
+        return this.layerSettings.isNearestTime();
+    }
+
+    @Override
+    public boolean isIntervalTime() {
+        return this.layerSettings.isIntervalTime();
     }
 
     @Override

@@ -40,18 +40,20 @@ package thredds.server.wms;
 import org.joda.time.Chronology;
 import org.joda.time.DateTime;
 import ucar.nc2.dt.GridDatatype;
-import uk.ac.rdg.resc.ncwms.cdm.CdmUtils;
-import uk.ac.rdg.resc.ncwms.cdm.DataReadingStrategy;
-import uk.ac.rdg.resc.ncwms.coords.HorizontalPosition;
-import uk.ac.rdg.resc.ncwms.coords.PointList;
+import uk.ac.rdg.resc.edal.cdm.CdmUtils;
+import uk.ac.rdg.resc.edal.cdm.DataReadingStrategy;
+import uk.ac.rdg.resc.edal.geometry.HorizontalPosition;
 import uk.ac.rdg.resc.ncwms.exceptions.InvalidDimensionValueException;
-import uk.ac.rdg.resc.ncwms.util.Range;
+import uk.ac.rdg.resc.edal.util.Range;
 import uk.ac.rdg.resc.ncwms.wms.AbstractScalarLayer;
+import uk.ac.rdg.resc.ncwms.wms.Dataset;
+import uk.ac.rdg.resc.edal.coverage.domain.Domain;
 
 import java.io.IOException;
 import java.util.List;
 import thredds.server.wms.config.LayerSettings;
 import ucar.nc2.Attribute;
+import ucar.nc2.dataset.NetcdfDataset;
 import uk.ac.rdg.resc.ncwms.graphics.ColorPalette;
 
 /**
@@ -109,23 +111,23 @@ class ThreddsScalarLayer extends AbstractScalarLayer implements ThreddsLayer
     public Float readSinglePoint(DateTime time, double elevation, HorizontalPosition xy)
             throws InvalidDimensionValueException, IOException
     {
-        PointList singlePoint = PointList.fromPoint(xy);
-        return this.readPointList(time, elevation, singlePoint).get(0);
+        Domain singlePoint = (Domain<HorizontalPosition>)xy;
+        return this.readHorizontalPoints(time, elevation, singlePoint).get(0);
     }
 
     @Override
-    public List<Float> readPointList(DateTime time, double elevation, PointList pointList)
+    public List<Float> readHorizontalPoints(DateTime time, double elevation, Domain domain)
             throws InvalidDimensionValueException, IOException
     {
         int tIndex = this.findAndCheckTimeIndex(time);
         int zIndex = this.findAndCheckElevationIndex(elevation);
-        return CdmUtils.readPointList(
-            this.grid,
-            this.getHorizontalCoordSys(),
+        return CdmUtils.readHorizontalPoints(
+            NetcdfDataset.openDataset(null),
+            this.getStandardName(),
+            this.getHorizontalGrid(),
             tIndex,
             zIndex,
-            pointList,
-            this.dataReadingStrategy
+            domain
         );
     }
 
@@ -148,6 +150,16 @@ class ThreddsScalarLayer extends AbstractScalarLayer implements ThreddsLayer
     @Override
     public boolean isQueryable() {
         return this.layerSettings.isAllowFeatureInfo();
+    }
+
+    @Override
+    public boolean isNearestTime() {
+        return this.layerSettings.isNearestTime();
+    }
+
+    @Override
+    public boolean isIntervalTime() {
+        return this.layerSettings.isIntervalTime();
     }
 
     @Override

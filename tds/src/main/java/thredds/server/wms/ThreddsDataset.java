@@ -36,10 +36,8 @@ import org.joda.time.DateTime;
 import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.dt.GridDataset;
 import ucar.nc2.dt.GridDatatype;
-import uk.ac.rdg.resc.ncwms.cdm.AbstractScalarLayerBuilder;
-import uk.ac.rdg.resc.ncwms.cdm.CdmUtils;
-import uk.ac.rdg.resc.ncwms.cdm.DataReadingStrategy;
-import uk.ac.rdg.resc.ncwms.cdm.LayerBuilder;
+import uk.ac.rdg.resc.edal.cdm.CdmUtils;
+import uk.ac.rdg.resc.edal.cdm.DataReadingStrategy;
 import uk.ac.rdg.resc.ncwms.util.WmsUtils;
 import uk.ac.rdg.resc.ncwms.wms.Dataset;
 import uk.ac.rdg.resc.ncwms.wms.Layer;
@@ -65,30 +63,6 @@ public class ThreddsDataset implements Dataset
           new LinkedHashMap<String, ThreddsVectorLayer>();
 
   /**
-   * LayerBuilder used to create ThreddsLayers in CdmUtils.findAndUpdateLayers
-   */
-  private static final LayerBuilder<ThreddsScalarLayer> THREDDS_LAYER_BUILDER = new AbstractScalarLayerBuilder<ThreddsScalarLayer>()
-  {
-    @Override
-    public ThreddsScalarLayer newLayer( String id )
-    {
-      return new ThreddsScalarLayer( id );
-    }
-
-    @Override
-    public void setTimeValues( ThreddsScalarLayer layer, List<DateTime> times )
-    {
-      layer.setTimeValues( times );
-    }
-
-    @Override
-    public void setGridDatatype( ThreddsScalarLayer layer, GridDatatype grid )
-    {
-      layer.setGridDatatype( grid );
-    }
-  };
-
-  /**
    * Creates a new ThreddsDataset with the given id from the given NetcdfDataset
    */
   public ThreddsDataset( String urlPath, GridDataset gridDataset, WmsDetailedConfig wmsConfig )
@@ -101,8 +75,6 @@ public class ThreddsDataset implements Dataset
     // Get the most appropriate data-reading strategy for this dataset
     DataReadingStrategy drStrategy = CdmUtils.getOptimumDataReadingStrategy( ncDataset );
 
-    // Now load the scalar layers
-    CdmUtils.findAndUpdateLayers( gridDataset, THREDDS_LAYER_BUILDER, this.scalarLayers );
     // Set the extra properties of each layer
     for ( ThreddsScalarLayer layer : this.scalarLayers.values() )
     {
