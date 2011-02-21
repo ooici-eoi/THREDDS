@@ -80,6 +80,8 @@ public enum FeatureType {
   SWATH,
   /** Image data */
   IMAGE,
+  /** Unstructured Grid data */
+  UGRID,
 
   /** Any of the point types */
   ANY_POINT,
@@ -127,7 +129,7 @@ public enum FeatureType {
   }
 
   public boolean isGridFeatureType() {
-    return (this == FeatureType.GRID) || (this == FeatureType.FMRC);
+    return (this == FeatureType.GRID) || (this == FeatureType.FMRC) || (this == FeatureType.UGRID);
   }
 
 }

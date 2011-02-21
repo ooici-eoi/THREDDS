@@ -176,6 +176,17 @@ public class CoordSysBuilder implements CoordSysBuilderIF {
     registerConvention("AvhrrSatellite", AvhrrConvention.class, null);
     registerConvention("NPP/NPOESS", NppConvention.class, null);
 
+    // ugrid
+    registerConvention("UGRID-1.", UGridConvention.class, new ConventionNameOk() {
+      public boolean isMatch(String convName, String wantName) {
+        if (convName.startsWith(wantName)) return true;
+        List<String> names = breakupConventionNames(convName);
+        for (String name : names)
+          if (name.startsWith(wantName)) return true;
+        return false;
+      }
+    });
+
     // further calls to registerConvention are by the user
     userMode = true;
   }
@@ -532,7 +543,7 @@ public class CoordSysBuilder implements CoordSysBuilderIF {
     }
   }
 
-  private void findCoordinateAxes(VarProcess vp, String coordinates) {
+  protected void findCoordinateAxes(VarProcess vp, String coordinates) {
     StringTokenizer stoker = new StringTokenizer(coordinates);
     while (stoker.hasMoreTokens()) {
       String vname = stoker.nextToken();
