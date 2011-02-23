@@ -73,6 +73,7 @@
   <property name="spring.jar" value="spring-2.5.jar"/>
   <property name="stax.jar" value="stax-api-1.0.1.jar"/>
   <property name="visadNoDods.jar" value="visadNoDods.jar"/>
+  <property name="colt.jar" value="colt-1.2.0.jar"/>
 
   <!-- source -->
   <path id="sourcepath">
@@ -93,6 +94,7 @@
     <include name="external/${quartz.jar}"/>
     <include name="release/${visadNoDods.jar}"/>
     <include name="external/${stax.jar}"/>
+    <include name="external/${colt.jar}"/>
   </fileset>
 
   <!-- ToDo Remove, not used? -->
