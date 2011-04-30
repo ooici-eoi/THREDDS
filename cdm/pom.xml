@@ -18,7 +18,7 @@
   <groupId>edu.ucar</groupId>
   <artifactId>netcdf</artifactId>
   <packaging>jar</packaging>
-  <version>4.2.22</version>
+  <version>${netcdf.version}</version>
   <name>NetCDF-Java Library</name>
   <description>
     The NetCDF-Java Library is a Java interface to NetCDF files,
@@ -142,7 +142,7 @@
     <dependency>
       <groupId>edu.ucar</groupId>
       <artifactId>unidataCommon</artifactId>
-      <version>4.2.22</version>
+      <version>${common.version}</version>
     </dependency>
     <dependency>
       <groupId>commons-httpclient</groupId>
@@ -163,21 +163,21 @@
       <groupId>edu.ucar</groupId>
       <!-- Reading GRIB files. -->
       <artifactId>grib</artifactId>
-      <version>4.2.22</version>
+      <version>${grib.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>edu.ucar</groupId>
       <artifactId>opendap</artifactId>
       <!-- Using OPeNDAP protocol. -->
-      <version>4.2.22</version>
+      <version>${opendap.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <artifactId>visad</artifactId>
       <!-- Reading McIDAS AREA files. -->
       <groupId>edu.wisc</groupId>
-      <version>2010-08-09</version>
+      <version>${visad.version}</version>
       <scope>provided</scope>
     </dependency>
 
@@ -215,6 +215,11 @@
       <groupId>com.sleepycat</groupId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.sun.jna</groupId>
+      <artifactId>jna</artifactId>
+      <version>3.0.9</version>
+    </dependency>
   </dependencies>
 
 
@@ -251,7 +256,7 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <excludes>
-            <exclude>thredds/logs/**</exclude>
+<!--            <exclude>thredds/logs/**</exclude>-->
             <exclude>ucar/nc2/dataset/grid/**</exclude>
             <exclude>ucar/nc2/jni/**</exclude>
             <exclude>ucar/nc2/util/reflect/**</exclude>
