@@ -1,0 +1,13 @@
+######################
+# OS generated files #
+######################
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
+
+/bufr/target/
+/cdm/target/
+/common/target/
+/grib/target/
+/opendap/target/
