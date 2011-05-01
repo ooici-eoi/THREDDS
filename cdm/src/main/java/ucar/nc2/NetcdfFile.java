@@ -240,6 +240,12 @@ public class NetcdfFile implements ucar.nc2.util.cache.FileCacheable {
     } catch (Throwable e) {
       if (loadWarnings) log.info("Cant load class: " + e);
     }
+    try {
+      NetcdfFile.class.getClassLoader().loadClass("net.ooici.netcdf.iosp.IospExistCheck"); // only load if ooici.jar is present
+      registerIOProvider("net.ooici.netcdf.iosp.OOICIiosp");
+    } catch (Throwable e) {
+      if (loadWarnings) log.info("Cant load class: " + e);
+    }
 
     userLoads = true;
   }
@@ -492,6 +498,8 @@ public class NetcdfFile implements ucar.nc2.util.cache.FileCacheable {
       uriString = "http" + uriString.substring(5);
       byte[] contents = IO.readURLContentsToByteArray( uriString); // read all into memory
       raf = new InMemoryRandomAccessFile(uriString, contents);
+    } else if (uriString.startsWith("ooici:")) { // open through OOICI
+      raf = new ucar.nc2.iosp.ooici.OOICIRandomAccessFile(uriString);
 
     } else {
       // get rid of crappy microsnot \ replace with happy /
