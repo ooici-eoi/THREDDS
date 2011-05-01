@@ -672,6 +672,54 @@
   </target>
 
   <property name="jarUI" value="netcdfUI-${release.version}.jar"/>
+  <target name="mvnMakeUI" depends="compileUI" description="make toolsUI jar, called from 'mvnMakeToolsUI' - prior compilation with Maven assumed">
+      <copy file="README.TEMPLATE" tofile="${build.dir}/README" overwrite="true">
+      <filterset>
+        <filter token="BUILDTIME" value="${build.time}"/>
+        <filter token="VERSION" value="${release.version}"/>
+        <filter token="VERSION.MINOR" value="${release.version.minor}"/>
+      </filterset>
+    </copy>
+
+    <copy file="CHANGES.txt" tofile="${build.dir}/CHANGES" overwrite="true">
+      <filterset>
+        <filter token="BUILDTIME" value="${build.time}"/>
+        <filter token="VERSION" value="${release.version}"/>
+        <filter token="VERSION.MINOR" value="${release.version.minor}"/>
+      </filterset>
+    </copy>
+
+    <pathconvert property="ClassPath" refid="runtimeUI.classpath" pathsep=" ">
+      <mapper type="flatten"/>
+    </pathconvert>
+    <echo>ClassPath=${ClassPath}</echo>
+
+    <!-- Ant jar task with index="true" will create JARs hiding any Class-Path: ... entries ! -->
+    <jar jarfile="${build.dir}/${jarUI}" duplicate="preserve">
+      <fileset dir="${build.dir}" includes="README"/>
+      <fileset dir="${build.dir}" includes="CHANGES"/>
+      <fileset dir="${build.classes.dir}"/>
+      <zipfileset dir="${resources.dir}/resources" prefix="resources"/>
+      <zipfileset dir="${resourcesUI.dir}/resources" prefix="resources"/>
+
+      <manifest>
+        <attribute name="Main-Class" value="ucar.nc2.ui.ToolsUI"/>
+        <attribute name="Class-Path" value="${ClassPath}"/>
+        <attribute name="Built-By" value="${user.name}"/>
+        <attribute name="Built-On" value="${build.time}"/>
+        <attribute name="Implementation-Title" value="NetCDF-Java-UITools"/>
+        <attribute name="Implementation-Version" value="${release.version.minor}"/>
+        <attribute name="Implementation-Vendor" value="UCAR/Unidata"/>
+      </manifest>
+
+      <indexjars>
+        <path refid="compile.classpath"/>
+        <path refid="compileUI.classpath"/>
+        <pathelement location="${lib.dir}/release/${resourcesOptional.jar}"/>
+      </indexjars>
+
+    </jar>
+  </target>
   <target name="makeUI" depends="compile, compileUI" description="make toolsUI jar">
     <copy file="README.TEMPLATE" tofile="${build.dir}/README" overwrite="true">
       <filterset>
@@ -741,7 +789,33 @@
   </target>
 
   <property name="toolsUI" value="toolsUI-${release.version}.jar"/>
-  <target name="makeToolsUI" depends="makeMain, makeUI" description="create toolsUI jar file">
+  <target name="mvnMakeToolsUI" depends="mvnMakeUI" description="create toolsUI jar file - prior compilation with Maven assumed">
+      <!--unzip all so we can make uiAll -->
+    <mkdir dir="${uiZip.dir}"/>
+    <unzip dest="${uiZip.dir}">
+      <fileset refid="compile.libraries"/>
+      <fileset refid="compileUI.libraries"/>
+      <fileset refid="runtime.libraries"/>
+      <fileset file="${build.dir}/${jarUI}"/>
+      <fileset file="${lib.dir}/release/${resourcesOptional.jar}"/>
+    </unzip>
+
+    <jar jarfile="${build.dir}/${toolsUI}" index="true" duplicate="preserve">
+      <fileset dir="${build.dir}" includes="README"/>
+      <fileset dir="${build.dir}" includes="CHANGES"/>
+      <fileset dir="${uiZip.dir}"/>
+
+      <manifest>
+        <attribute name="Main-Class" value="ucar.nc2.ui.ToolsUI"/>
+        <attribute name="Built-By" value="${user.name}"/>
+        <attribute name="Built-On" value="${build.time}"/>
+        <attribute name="Implementation-Title" value="NetCDF-Java-ToolsUI"/>
+        <attribute name="Implementation-Version" value="${release.version.minor}"/>
+        <attribute name="Implementation-Vendor" value="UCAR/Unidata"/>
+      </manifest>
+    </jar>
+  </target>
+<target name="makeToolsUI" depends="makeMain, makeUI" description="create toolsUI jar file">
     <!--unzip all so we can make uiAll -->
     <mkdir dir="${uiZip.dir}"/>
     <unzip dest="${uiZip.dir}">
