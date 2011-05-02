@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package ucar.nc2.iosp.ooici;
+package net.ooici.netcdf.iosp;
 
 import java.io.IOException;
 
