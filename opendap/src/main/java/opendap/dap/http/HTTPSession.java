@@ -143,6 +143,9 @@ public class HTTPSession {
     this.identifier = id;
     try {
       sessionClient = new HttpClient(new HttpClientParams(), connmgr);
+      /* Allow circular redirects for authentication */
+      sessionClient.getParams().setParameter(HttpClientParams.ALLOW_CIRCULAR_REDIRECTS, true);
+      sessionList.add(this);
 
       // H/T: nick.bower@metoceanengineers.com
       setProxy();
