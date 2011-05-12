@@ -61,10 +61,10 @@
   <property name="jgoodies.jar" value="forms-1.0.7.jar"/>
   <property name="junit.jar" value="junit-4.5.jar"/>
   <property name="easymock.jar" value="easymock-2.5.2.jar"/>
-  <property name="loggingAPI.jar" value="slf4j-api-1.5.6.jar"/>
-  <property name="logging-minimal.jar" value="slf4j-jdk14-1.5.6.jar"/>
-  <property name="logging-maximal.jar" value="slf4j-log4j12-1.5.6.jar"/>
-  <property name="log4j.jar" value="log4j-1.2.15.jar"/>
+  <property name="loggingAPI.jar" value="slf4j-api-1.6.1.jar"/>
+  <property name="logging-minimal.jar" value="slf4j-jdk14-1.6.1.jar"/>
+  <property name="logging-maximal.jar" value="slf4j-log4j12-1.6.1.jar"/>
+  <property name="log4j.jar" value="log4j-1.2.16.jar"/>
   <!-- property name="lucene.jar" value="lucene.jar"/ -->
   <property name="opendap.jar" value="opendap-2.2.jar"/>
   <property name="protobuf.jar" value="protobuf-java-2.3.0.jar"/>
@@ -672,7 +672,7 @@
   </target>
 
   <property name="jarUI" value="netcdfUI-${release.version}.jar"/>
-  <target name="mvnMakeUI" depends="compileUI" description="make toolsUI jar, called from 'mvnMakeToolsUI' - prior compilation with Maven assumed">
+  <target name="ooiciMakeUI" depends="compileUI" description="make toolsUI jar, called from 'mvnMakeToolsUI' - prior compilation with Maven assumed">
       <copy file="README.TEMPLATE" tofile="${build.dir}/README" overwrite="true">
       <filterset>
         <filter token="BUILDTIME" value="${build.time}"/>
@@ -789,7 +789,8 @@
   </target>
 
   <property name="toolsUI" value="toolsUI-${release.version}.jar"/>
-  <target name="mvnMakeToolsUI" depends="mvnMakeUI" description="create toolsUI jar file - prior compilation with Maven assumed">
+<!--  <target name="ooiciMakeToolsUI" depends="ooiciMakeUI" description="create toolsUI jar file - prior compilation with Maven assumed">-->
+  <target name="ooiciMakeToolsUI" depends="" description="create toolsUI jar file - prior compilation with Maven assumed">
       <!--unzip all so we can make uiAll -->
     <mkdir dir="${uiZip.dir}"/>
     <unzip dest="${uiZip.dir}">
@@ -798,6 +799,9 @@
       <fileset refid="runtime.libraries"/>
       <fileset file="${build.dir}/${jarUI}"/>
       <fileset file="${lib.dir}/release/${resourcesOptional.jar}"/>
+      <!--   ooici deps   -->
+      <fileset id="ooici.libraries" dir="${lib.dir}/ooici">
+      </fileset>
     </unzip>
 
     <jar jarfile="${build.dir}/${toolsUI}" index="true" duplicate="preserve">
