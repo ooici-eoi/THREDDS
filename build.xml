@@ -1,0 +1,48 @@
+<project name="ooici-netcdf" default="dist" xmlns:ivy="antlib:org.apache.ivy.ant" basedir=".">
+    <!-- import properties -->
+    <property file="build.properties" />
+
+    <target name="init-rel">
+        <copy file="cdm/target/netcdf-${netcdf.ver}.jar" tofile="lib/release/netcdf-${netcdf.rel.ver}.jar" overwrite="true" />
+        <copy file="common/target/unidataCommon-${common.ver}.jar" tofile="lib/release/unidataCommon-${common.rel.ver}.jar" overwrite="true" />
+        <copy file="opendap/target/opendap-${opendap.ver}.jar" tofile="lib/release/opendap-${opendap.rel.ver}.jar" overwrite="true" />
+        <copy file="bufr/target/bufr-${bufr.ver}.jar" tofile="lib/release/bufr-${bufr.rel.ver}.jar" overwrite="true" />
+        <copy file="grib/target/grib-${grib.ver}.jar" tofile="lib/release/grib-${grib.rel.ver}.jar" overwrite="true" />
+    </target>
+
+    <target name="relToolsUI">
+        <antcall target="init-rel"/>
+        <antcall target="makeOoiciIosp"/>
+        <ant dir="cdm" antfile="build.xml" target="ooiciMakeToolsUI" inheritall="false" inheritrefs="false" />
+        <copy file="cdm/target/toolsUI-${netcdf.rel.ver}.jar" todir="lib/release" overwrite="true" />
+    </target>
+
+    <target name="relTds">
+        <antcall target="init-rel"/>
+        <antcall target="makeOoiciIosp"/>
+        <ant dir="tds" antfile="build.xml" target="cleanMakeWar" inheritall="false" inheritrefs="false" />
+        <copy file="tds/target/thredds.war" todir="lib/release" overwrite="true" />
+    </target>
+
+    <target name="copy-ooi-deps">
+        <delete dir="lib/ooici" />
+        <mkdir dir="lib/ooici" />
+        <copy todir="lib/ooici" >
+            <fileset dir="ooici/lib">
+                <include name="*.jar"/>
+                <exclude name="netcdf*"/>
+                <exclude name="unidata*"/>
+                <exclude name="spring*"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="makeOoiciIosp">
+        <antcall target="copy-ooi-deps" />
+        <copy file="cdm/target/netcdf-${netcdf.ver}.jar" tofile="ooici/.settings/override-repo/netcdf-${netcdf.rel.ver}.jar" overwrite="true" />
+        <copy file="common/target/unidataCommon-${common.ver}.jar" tofile="ooici/.settings/override-repo/unidataCommon-${common.rel.ver}.jar" overwrite="true" />
+        <ant dir="ooici" antfile="build.xml" target="dist" inheritall="false" inheritrefs="false" />
+        <copy file="ooici/dist/lib/ooici-netcdf-iosp-${ooici.ver}.jar" todir="lib/ooici" overwrite="true" />
+    </target>
+
+    
+</project>
