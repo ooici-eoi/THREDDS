@@ -6,9 +6,24 @@ ehthumbs.db
 Icon?
 Thumbs.db
 
+###########################
+# Ignore target directories
+###########################
 /bufr/target/
 /cdm/target/
 /common/target/
 /grib/target/
 /opendap/target/
+/tds/target/
+############################################
+# Ignore ooici build/ivy related directories
+############################################
 /ooici/.settings/
+/ooici/build/
+/ooici/dist/
+/ooici/docs/
+/ooici/lib/
+###########################
+# Ignore lib/ooici
+###########################
+/lib/ooici/
