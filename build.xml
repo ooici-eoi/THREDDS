@@ -23,6 +23,10 @@
         <ant dir="tds" antfile="build.xml" target="cleanMakeWar" inheritall="false" inheritrefs="false" />
         <copy file="tds/target/thredds.war" todir="lib/release" overwrite="true" />
     </target>
+    <target name="relCdmValidator">
+        <ant dir="tds" antfile="build.xml" target="makeWar-cdmvalidator" inheritall="false" inheritrefs="false" />
+        <copy file="tds/target/cdmvalidator.war" todir="lib/release" overwrite="true" />        
+    </target>
 
     <target name="copy-ooi-deps">
         <delete dir="lib/ooici" />
