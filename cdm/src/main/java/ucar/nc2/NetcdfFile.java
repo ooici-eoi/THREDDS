@@ -242,7 +242,11 @@ public class NetcdfFile implements ucar.nc2.util.cache.FileCacheable {
     }
     try {
       NetcdfFile.class.getClassLoader().loadClass("net.ooici.netcdf.iosp.IospUtils"); // only load if ooici.jar is present
-      registerIOProvider("net.ooici.netcdf.iosp.OOICIiosp");
+      try {
+          registerIOProvider("net.ooici.netcdf.iosp.OOICIiosp");
+      } catch (InstantiationException ex) {
+          log.error("Error loading OOICI Iosp:", ex);
+      }
     } catch (Throwable e) {
       if (loadWarnings) log.info("Cant load class: " + e);
     }
