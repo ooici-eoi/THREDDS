@@ -81,6 +81,7 @@
   <property name="netcdf.jar" value="release/netcdf-4.2.jar"/>
   <property name="opendap.jar" value="release/opendap-2.2.jar"/>
   <property name="threddsIso.jar" value="release/threddsIso-1.1.1.jar"/>
+  <property name="unidataCommon.jar" value="release/unidataCommon-4.2.jar"/>
   <property name="visadNoDods.jar" value="release/visadNoDods.jar"/>
 
   <!-- Third-party libraries needed for compile. -->
@@ -97,9 +98,9 @@
   <property name="jfreechart.jar" value="external/jfreechart-1.0.12.jar"/>
   <property name="joda.jar" value="external/joda-time-1.6.jar"/>
   <property name="protobuf.jar" value="external/protobuf-java-2.3.0.jar"/>
-  <property name="slf4jAPI.jar" value="external/slf4j-api-1.5.6.jar"/>
-  <property name="slf4jImpl.jar" value="external/slf4j-log4j12-1.5.6.jar"/>
-  <property name="log4j.jar" value="external/log4j-1.2.15.jar"/>
+  <property name="slf4jAPI.jar" value="external/slf4j-api-1.6.1.jar"/>
+  <property name="slf4jImpl.jar" value="external/slf4j-log4j12-1.6.1.jar"/>
+  <property name="log4j.jar" value="external/log4j-1.2.16.jar"/>
   <!-- property name="nlog4j.jar" value="external/nlog4j-1.2.25.jar"/ -->
   <property name="quartz.jar" value="external/quartz-1.7.3.jar"/>
   <property name="spring.jar" value="external/spring-2.5.jar"/>
@@ -132,10 +133,15 @@
   <property name="junit.jar" value="external/junit-4.5.jar"/>
   <property name="httpunit.jar" value="external/httpunit.jar"/>
 
+  <fileset id="ooici.libraries" dir="${lib.dir}/ooici">
+      <include name="*.jar"/>
+  </fileset>
+  
   <fileset id="compile.libraries" dir="${lib.dir}">
     <patternset id="compile.libs">
       <include name="${netcdf.jar}"/>
-
+      
+      <include name="${unidataCommon.jar}"/>
       <include name="${bufr.jar}"/>
       <include name="${grib.jar}"/>
       <include name="${opendap.jar}"/>
@@ -334,6 +340,7 @@
     <copy todir="${war.dir}/WEB-INF/lib" flatten="true" overwrite="true" preservelastmodified="true">
       <fileset refid="compile.libraries"/>
       <fileset refid="runtime.libraries"/>
+      <fileset refid="ooici.libraries"/>
     </copy>
 
    <!-- Copy webapps dir  -->
