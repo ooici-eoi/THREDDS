@@ -42,11 +42,13 @@
     </target>
     <target name="makeOoiciIosp">
         <antcall target="copy-ooi-deps" />
-        <copy file="cdm/target/netcdf-${netcdf.ver}.jar" tofile="ooici/.settings/override-repo/netcdf-${netcdf.rel.ver}.jar" overwrite="true" />
-        <copy file="common/target/unidataCommon-${common.ver}.jar" tofile="ooici/.settings/override-repo/unidataCommon-${common.rel.ver}.jar" overwrite="true" />
         <ant dir="ooici" antfile="build.xml" target="dist" inheritall="false" inheritrefs="false" />
         <copy file="ooici/dist/lib/ooici-netcdf-iosp-${ooici.ver}.jar" todir="lib/ooici" overwrite="true" />
     </target>
 
-    
+    <target name="stage_netcdf_deps">
+        <copy file="cdm/target/netcdf-${netcdf.ver}.jar" tofile="ooici/.settings/override-repo/netcdf-${netcdf.rel.ver}.jar" overwrite="true" />
+        <copy file="common/target/unidataCommon-${common.ver}.jar" tofile="ooici/.settings/override-repo/unidataCommon-${common.rel.ver}.jar" overwrite="true" />
+        <copy file="opendap/target/opendap-${opendap.ver}.jar" tofile="ooici/.settings/override-repo/opendap-${opendap.rel.ver}.jar" overwrite="true" />
+    </target>
 </project>
