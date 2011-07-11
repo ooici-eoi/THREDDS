@@ -41,8 +41,8 @@
         </copy>
     </target>
     <target name="makeOoiciIosp">
-        <antcall target="copy-ooi-deps" />
         <ant dir="ooici" antfile="build.xml" target="dist" inheritall="false" inheritrefs="false" />
+        <antcall target="copy-ooi-deps" />
         <copy file="ooici/dist/lib/ooici-netcdf-iosp-${ooici.ver}.jar" todir="lib/ooici" overwrite="true" />
     </target>
 

@@ -18,7 +18,8 @@ Thumbs.db
 ############################################
 # Ignore ooici build/ivy related directories
 ############################################
-/ooici/.settings/
+/ooici/.settings/ivy-cache/
+/ooici/.settings/override-repo/
 /ooici/build/
 /ooici/dist/
 /ooici/docs/

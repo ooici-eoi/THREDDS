@@ -1,0 +1,32 @@
+==================================================
+Ocean Observatories Initiative Cyberinfrastructure
+Integrated Observatory Network (ION)
+eoi-agents - External Observatory Integration DatasetAgent Implementation
+==================================================
+
+Source
+======
+Obtain the eoi-agents project by running:
+::
+	git clone git@github.com:ooici-eoi/THREDDS.git
+
+
+Pre-compilation
+>>> Only need to do once or after modifications to base NetCDF component libraries
+===============
+
+From THREDDS directory:
+1) mvn install
+2) ant -f cdm/build.xml ooiciMakeUI
+
+
+Compile/release toolsUI jar
+>>>  Resulting jar file in lib/releases
+===========================
+ant relToolsUI
+
+
+Compile/release thredds war
+>>>  Resulting war file in lib/releases
+===========================
+ant relTds
