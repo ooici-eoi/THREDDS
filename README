@@ -6,9 +6,9 @@ eoi-agents - External Observatory Integration DatasetAgent Implementation
 
 Source
 ======
-Obtain the eoi-agents project by running:
+Obtain the THREDDS project by running:
 ::
-	git clone git@github.com:ooici-eoi/THREDDS.git
+	git clone -b develop git@github.com:ooici-eoi/THREDDS.git
 
 
 Pre-compilation
@@ -17,6 +17,11 @@ Pre-compilation
 
 From THREDDS directory:
 1) mvn install
+1a) IF you make changes to any of the core NetCDF libraries (in the 'cdm', 'opendap', 'bufr', 'common', or 'grib' directories) - they will only be discovered by the ooici-iosp codebase if you either:
+	a) copy the libraries to the ooici/.settings/override-repo by running: "ant stage_netcdf_deps" from the THREDDS directory
+		**Note that if you use this method, you will need to run "ant unstage_netcdf_deps" in order to switch back to getting the core dependencies from the remote server
+	b) copy the new core libraries to the root level of the ooici.net release server so they are available for the ooici-iosp codebase
+		** After the new libraries are available on the server, run "ant resolve" from the THREDDS/ooici/ directory to update the local workspace
 2) ant -f cdm/build.xml ooiciMakeUI
 
 

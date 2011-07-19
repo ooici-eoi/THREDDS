@@ -502,7 +502,7 @@ public class NetcdfFile implements ucar.nc2.util.cache.FileCacheable {
       uriString = "http" + uriString.substring(5);
       byte[] contents = IO.readURLContentsToByteArray( uriString); // read all into memory
       raf = new InMemoryRandomAccessFile(uriString, contents);
-    } else if (uriString.startsWith("ooici:")) { // open through OOICI
+    } else if (uriString.startsWith("ion:")) { // open through OOICI
       raf = new net.ooici.netcdf.iosp.OOICIRandomAccessFile(uriString);
 
     } else {

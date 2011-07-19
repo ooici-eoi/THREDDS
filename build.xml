@@ -10,14 +10,14 @@
         <copy file="grib/target/grib-${grib.ver}.jar" tofile="lib/release/grib-${grib.rel.ver}.jar" overwrite="true" />
     </target>
 
-    <target name="relToolsUI">
+    <target name="relToolsUI" description="Compile and bundle the ToolsUI.jar file.  The resulting JAR is copied to the 'lib/releases/' directory">
         <antcall target="init-rel"/>
         <antcall target="makeOoiciIosp"/>
         <ant dir="cdm" antfile="build.xml" target="ooiciMakeToolsUI" inheritall="false" inheritrefs="false" />
         <copy file="cdm/target/toolsUI-${netcdf.rel.ver}.jar" todir="lib/release" overwrite="true" />
     </target>
 
-    <target name="relTds">
+    <target name="relTds" description="Compile and bundle the thredds.war file.  The resulting JAR is copied to the 'lib/releases/' directory">
         <antcall target="init-rel"/>
         <antcall target="makeOoiciIosp"/>
         <ant dir="tds" antfile="build.xml" target="cleanMakeWar" inheritall="false" inheritrefs="false" />
@@ -40,15 +40,39 @@
             </fileset>
         </copy>
     </target>
-    <target name="makeOoiciIosp">
+    
+    <target name="makeOoiciIosp" description="Compile and bundle the ooici-netcdf-iosp.jar file.  The resulting JAR is copied to the 'lib/ooici' directory">
         <ant dir="ooici" antfile="build.xml" target="dist" inheritall="false" inheritrefs="false" />
         <antcall target="copy-ooi-deps" />
         <copy file="ooici/dist/lib/ooici-netcdf-iosp-${ooici.ver}.jar" todir="lib/ooici" overwrite="true" />
     </target>
 
-    <target name="stage_netcdf_deps">
+    <target name="stage_netcdf_deps" description="Copies the netcdf, unidataCommon, opendap, grib, and bufr JAR files to the .settings/override-repo directory">
+    	<!-- Copy new dependencies into override-repo -->
         <copy file="cdm/target/netcdf-${netcdf.ver}.jar" tofile="ooici/.settings/override-repo/netcdf-${netcdf.rel.ver}.jar" overwrite="true" />
         <copy file="common/target/unidataCommon-${common.ver}.jar" tofile="ooici/.settings/override-repo/unidataCommon-${common.rel.ver}.jar" overwrite="true" />
         <copy file="opendap/target/opendap-${opendap.ver}.jar" tofile="ooici/.settings/override-repo/opendap-${opendap.rel.ver}.jar" overwrite="true" />
+        
+        <!-- Remove entries from ivy-cache -->
+        <delete dir="ooici/.settings/ivy-cache/net.ooici/netcdf" />
+        <delete dir="ooici/.settings/ivy-cache/net.ooici/unidataCommon" />
+        <delete dir="ooici/.settings/ivy-cache/net.ooici/opendap" />
+        
+        <!-- Resolve ooici project -->
+        <ant dir="ooici" antfile="build.xml" target="resolve" inheritall="false" inheritrefs="false"/>
+    </target>
+    <target name="unstage_netcdf_deps" description="Deletes the netcdf, unidataCommon, opendap, grib, and bufr JAR files from the .settings/override-repo directory">
+    	<!-- Delete dependencies from override-repo -->
+    	<delete file="ooici/.settings/override-repo/netcdf-${netcdf.rel.ver}.jar"/>
+    	<delete file="ooici/.settings/override-repo/unidataCommon-${common.rel.ver}.jar"/>
+    	<delete file="ooici/.settings/override-repo/opendap-${opendap.rel.ver}.jar"/>
+    	
+    	<!-- Remove entries from ivy-cache -->
+        <delete dir="ooici/.settings/ivy-cache/net.ooici/netcdf" />
+        <delete dir="ooici/.settings/ivy-cache/net.ooici/unidataCommon" />
+        <delete dir="ooici/.settings/ivy-cache/net.ooici/opendap" />
+        
+        <!-- Resolve ooici project -->
+        <ant dir="ooici" antfile="build.xml" target="resolve" inheritall="false" inheritrefs="false"/>
     </target>
 </project>

@@ -800,6 +800,7 @@
       <fileset refid="runtime.libraries"/>
       <fileset file="${build.dir}/${jarUI}"/>
       <fileset file="${lib.dir}/release/${resourcesOptional.jar}"/>
+      <fileset file="${lib.dir}/release/${jarMain}"/>
       <!--   ooici deps   -->
       <fileset id="ooici.libraries" dir="${lib.dir}/ooici">
       </fileset>
