@@ -25,6 +25,7 @@ Thumbs.db
 /ooici/docs/
 /ooici/lib/
 ###########################
-# Ignore lib/ooici
+# Ignore builtout lib directories
 ###########################
 /lib/ooici/
+/lib/release
