@@ -672,7 +672,7 @@
   </target>
 
   <property name="jarUI" value="netcdfUI-${release.version}.jar"/>
-  <target name="ooiciMakeUI" depends="compileUI" description="make toolsUI jar, called from 'mvnMakeToolsUI' - prior compilation with Maven assumed">
+  <target name="ionMakeUI" depends="compileUI" description="make toolsUI jar, called from 'mvnMakeToolsUI' - prior compilation with Maven assumed">
       <copy file="README.TEMPLATE" tofile="${build.dir}/README" overwrite="true">
       <filterset>
         <filter token="BUILDTIME" value="${build.time}"/>
@@ -789,8 +789,8 @@
   </target>
 
   <property name="toolsUI" value="toolsUI-${release.version}.jar"/>
-<!--  <target name="ooiciMakeToolsUI" depends="ooiciMakeUI" description="create toolsUI jar file - prior compilation with Maven assumed">-->
-  <target name="ooiciMakeToolsUI" depends="" description="create toolsUI jar file - prior compilation with Maven assumed">
+<!--  <target name="ionMakeToolsUI" depends="ionMakeUI" description="create toolsUI jar file - prior compilation with Maven assumed">-->
+  <target name="ionMakeToolsUI" depends="" description="create toolsUI jar file - prior compilation with Maven assumed">
       <!--unzip all so we can make uiAll -->
 	<delete dir="${uiZip.dir}"/>
     <mkdir dir="${uiZip.dir}"/>
@@ -801,13 +801,13 @@
       <fileset file="${build.dir}/${jarUI}"/>
       <fileset file="${lib.dir}/release/${resourcesOptional.jar}"/>
       <fileset file="${lib.dir}/release/${jarMain}"/>
-      <!--   ooici deps   -->
-      <fileset id="ooici.libraries" dir="${lib.dir}/ooici">
+      <!--   ion deps   -->
+      <fileset id="ion.libraries" dir="${lib.dir}/ion">
       </fileset>
     </unzip>
     
-    <!-- Copy the log4j.properties file from the ooici source -->
-    <copy todir="${uiZip.dir}" file="${basedir}/../ooici/src/log4j.properties"/>
+    <!-- Copy the log4j.properties file from the ion-netcdf-iosp source -->
+    <copy todir="${uiZip.dir}" file="${basedir}/../ion-netcdf-iosp/src/log4j.properties"/>
 
     <jar jarfile="${build.dir}/${toolsUI}" index="true" duplicate="preserve">
       <fileset dir="${build.dir}" includes="README"/>

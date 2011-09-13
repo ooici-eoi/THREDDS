@@ -133,7 +133,7 @@
   <property name="junit.jar" value="external/junit-4.5.jar"/>
   <property name="httpunit.jar" value="external/httpunit.jar"/>
 
-  <fileset id="ooici.libraries" dir="${lib.dir}/ooici">
+  <fileset id="ion.libraries" dir="${lib.dir}/ion">
       <include name="*.jar"/>
   </fileset>
   
@@ -340,7 +340,7 @@
     <copy todir="${war.dir}/WEB-INF/lib" flatten="true" overwrite="true" preservelastmodified="true">
       <fileset refid="compile.libraries"/>
       <fileset refid="runtime.libraries"/>
-      <fileset refid="ooici.libraries"/>
+      <fileset refid="ion.libraries"/>
     </copy>
 
    <!-- Copy webapps dir  -->

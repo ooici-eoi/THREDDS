@@ -1,4 +1,4 @@
-<project name="ooici-netcdf" default="dist" xmlns:ivy="antlib:org.apache.ivy.ant" basedir=".">
+<project name="ion-netcdf" default="dist" xmlns:ivy="antlib:org.apache.ivy.ant" basedir=".">
     <!-- import properties -->
     <property file="build.properties" />
 
@@ -12,14 +12,14 @@
 
     <target name="relToolsUI" description="Compile and bundle the ToolsUI.jar file.  The resulting JAR is copied to the 'lib/releases/' directory">
         <antcall target="init-rel"/>
-        <antcall target="makeOoiciIosp"/>
-        <ant dir="cdm" antfile="build.xml" target="ooiciMakeToolsUI" inheritall="false" inheritrefs="false" />
+        <antcall target="makeIonIosp"/>
+        <ant dir="cdm" antfile="build.xml" target="ionMakeToolsUI" inheritall="false" inheritrefs="false" />
         <copy file="cdm/target/toolsUI-${netcdf.rel.ver}.jar" todir="lib/release" overwrite="true" />
     </target>
 
     <target name="relTds" description="Compile and bundle the thredds.war file.  The resulting JAR is copied to the 'lib/releases/' directory">
         <antcall target="init-rel"/>
-        <antcall target="makeOoiciIosp"/>
+        <antcall target="makeIonIosp"/>
         <ant dir="tds" antfile="build.xml" target="cleanMakeWar" inheritall="false" inheritrefs="false" />
         <copy file="tds/target/thredds.war" todir="lib/release" overwrite="true" />
     </target>
@@ -28,11 +28,11 @@
         <copy file="tds/target/cdmvalidator.war" todir="lib/release" overwrite="true" />        
     </target>
 
-    <target name="copy-ooi-deps">
-        <delete dir="lib/ooici" />
-        <mkdir dir="lib/ooici" />
-        <copy todir="lib/ooici" >
-            <fileset dir="ooici/lib">
+    <target name="copy-ion-deps">
+        <delete dir="lib/ion" />
+        <mkdir dir="lib/ion" />
+        <copy todir="lib/ion" >
+            <fileset dir="ion-netcdf-iosp/lib">
                 <include name="*.jar"/>
                 <exclude name="netcdf*"/>
                 <exclude name="unidata*"/>
@@ -41,38 +41,38 @@
         </copy>
     </target>
     
-    <target name="makeOoiciIosp" description="Compile and bundle the ooici-netcdf-iosp.jar file.  The resulting JAR is copied to the 'lib/ooici' directory">
-        <ant dir="ooici" antfile="build.xml" target="dist" inheritall="false" inheritrefs="false" />
-        <antcall target="copy-ooi-deps" />
-        <copy file="ooici/dist/lib/ooici-netcdf-iosp-${ooici.ver}.jar" todir="lib/ooici" overwrite="true" />
+    <target name="makeIonIosp" description="Compile and bundle the ion-netcdf-iosp.jar file.  The resulting JAR is copied to the 'lib/ion' directory">
+        <ant dir="ion-netcdf-iosp" antfile="build.xml" target="dist" inheritall="false" inheritrefs="false" />
+        <antcall target="copy-ion-deps" />
+        <copy file="ion-netcdf-iosp/dist/lib/ion-netcdf-iosp-${ion.ver}.jar" todir="lib/ion" overwrite="true" />
     </target>
 
     <target name="stage_netcdf_deps" description="Copies the netcdf, unidataCommon, opendap, grib, and bufr JAR files to the .settings/override-repo directory">
     	<!-- Copy new dependencies into override-repo -->
-        <copy file="cdm/target/netcdf-${netcdf.ver}.jar" tofile="ooici/.settings/override-repo/netcdf-${netcdf.rel.ver}.jar" overwrite="true" />
-        <copy file="common/target/unidataCommon-${common.ver}.jar" tofile="ooici/.settings/override-repo/unidataCommon-${common.rel.ver}.jar" overwrite="true" />
-        <copy file="opendap/target/opendap-${opendap.ver}.jar" tofile="ooici/.settings/override-repo/opendap-${opendap.rel.ver}.jar" overwrite="true" />
+        <copy file="cdm/target/netcdf-${netcdf.ver}.jar" tofile="ion-netcdf-iosp/.settings/override-repo/netcdf-${netcdf.rel.ver}.jar" overwrite="true" />
+        <copy file="common/target/unidataCommon-${common.ver}.jar" tofile="ion-netcdf-iosp/.settings/override-repo/unidataCommon-${common.rel.ver}.jar" overwrite="true" />
+        <copy file="opendap/target/opendap-${opendap.ver}.jar" tofile="ion-netcdf-iosp/.settings/override-repo/opendap-${opendap.rel.ver}.jar" overwrite="true" />
         
         <!-- Remove entries from ivy-cache -->
-        <delete dir="ooici/.settings/ivy-cache/net.ooici/netcdf" />
-        <delete dir="ooici/.settings/ivy-cache/net.ooici/unidataCommon" />
-        <delete dir="ooici/.settings/ivy-cache/net.ooici/opendap" />
+        <delete dir="ion-netcdf-iosp/.settings/ivy-cache/net.ooici/netcdf" />
+        <delete dir="ion-netcdf-iosp/.settings/ivy-cache/net.ooici/unidataCommon" />
+        <delete dir="ion-netcdf-iosp/.settings/ivy-cache/net.ooici/opendap" />
         
-        <!-- Resolve ooici project -->
-        <ant dir="ooici" antfile="build.xml" target="resolve" inheritall="false" inheritrefs="false"/>
+        <!-- Resolve ion-netcdf-iosp project -->
+        <ant dir="ion-netcdf-iosp" antfile="build.xml" target="resolve" inheritall="false" inheritrefs="false"/>
     </target>
     <target name="unstage_netcdf_deps" description="Deletes the netcdf, unidataCommon, opendap, grib, and bufr JAR files from the .settings/override-repo directory">
     	<!-- Delete dependencies from override-repo -->
-    	<delete file="ooici/.settings/override-repo/netcdf-${netcdf.rel.ver}.jar"/>
-    	<delete file="ooici/.settings/override-repo/unidataCommon-${common.rel.ver}.jar"/>
-    	<delete file="ooici/.settings/override-repo/opendap-${opendap.rel.ver}.jar"/>
+    	<delete file="ion-netcdf-iosp/.settings/override-repo/netcdf-${netcdf.rel.ver}.jar"/>
+    	<delete file="ion-netcdf-iosp/.settings/override-repo/unidataCommon-${common.rel.ver}.jar"/>
+    	<delete file="ion-netcdf-iosp/.settings/override-repo/opendap-${opendap.rel.ver}.jar"/>
     	
     	<!-- Remove entries from ivy-cache -->
-        <delete dir="ooici/.settings/ivy-cache/net.ooici/netcdf" />
-        <delete dir="ooici/.settings/ivy-cache/net.ooici/unidataCommon" />
-        <delete dir="ooici/.settings/ivy-cache/net.ooici/opendap" />
+        <delete dir="ion-netcdf-iosp/.settings/ivy-cache/net.ooici/netcdf" />
+        <delete dir="ion-netcdf-iosp/.settings/ivy-cache/net.ooici/unidataCommon" />
+        <delete dir="ion-netcdf-iosp/.settings/ivy-cache/net.ooici/opendap" />
         
-        <!-- Resolve ooici project -->
-        <ant dir="ooici" antfile="build.xml" target="resolve" inheritall="false" inheritrefs="false"/>
+        <!-- Resolve ion-netcdf-iosp project -->
+        <ant dir="ion-netcdf-iosp" antfile="build.xml" target="resolve" inheritall="false" inheritrefs="false"/>
     </target>
 </project>
