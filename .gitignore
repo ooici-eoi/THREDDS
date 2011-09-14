@@ -27,5 +27,5 @@ Thumbs.db
 ###########################
 # Ignore builtout lib directories
 ###########################
-/lib/ooici/
+/lib/ion/
 /lib/release
