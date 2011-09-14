@@ -15,17 +15,9 @@ Thumbs.db
 /grib/target/
 /opendap/target/
 /tds/target/
-############################################
-# Ignore ooici build/ivy related directories
-############################################
-/ooici/.settings/ivy-cache/
-/ooici/.settings/override-repo/
-/ooici/build/
-/ooici/dist/
-/ooici/docs/
-/ooici/lib/
+
 ###########################
 # Ignore builtout lib directories
 ###########################
 /lib/ion/
-/lib/release
+/lib/release/
