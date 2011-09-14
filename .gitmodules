@@ -1,3 +1,3 @@
 [submodule "ion-netcdf-iosp"]
 	path = ion-netcdf-iosp
-	url = git@github.com:blazetopher/ion-netcdf-iosp.git
+	url = git@github.com:ooici-eoi/ion-netcdf-iosp.git
